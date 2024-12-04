@@ -9,10 +9,10 @@ import SwiftUI
 
 @main
 struct hushh_iosApp: App {
-    @StateObject private var themeManager = ThemeManager()
+    @StateObject private var themeManager = ThemeManager(currentTheme: .light)
     var body: some Scene {
         WindowGroup {
-            ContentView(themeName: "light")
+            ContentView(themeName: UserDefaults.standard.string(forKey: "selectedTheme") ?? "light")
                 .environmentObject(themeManager)
         }
     }

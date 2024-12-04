@@ -8,7 +8,7 @@
 import SwiftUI
 import AVFoundation
 
-struct ContentView: View {    
+struct ContentView: View {
     @EnvironmentObject var themeManager: ThemeManager
     
     let sounds = [
@@ -39,161 +39,169 @@ struct ContentView: View {
     ]
     
     var body: some View {
-        // TODO: replace themeManager.currentTheme with theme
         let currentTheme = themeManager.currentTheme
-            VStack (alignment: .leading) {
-                HStack(alignment: .top) {
-                    VStack(alignment: .leading) {
-                        Text("hushh")
-                            .font(
-                                .system(
-                                    size: 40,
-                                    weight: .semibold,
-                                    design: .monospaced
-                                )
-                            )
-                            .foregroundStyle(currentTheme.primaryColor)
-                        Text("noise maker.")
-                            .font(
-                                .system(
-                                    size: 20,
-                                    weight: .medium,
-                                    design: .monospaced
-                                )
-                            )
-                            .foregroundStyle(
-                                currentTheme.textColor
-                            )
-                    }
-                    Spacer()
-                    Image(systemName: "paintpalette.fill")
-                        .font(.system(size: 30))
-                        .foregroundStyle(currentTheme.secondaryColor)
-                        .padding(.top, 12)
-                        .padding(.trailing, 10)
-                        .onTapGesture {
-                            isThemeOptionsShowing = true
-                        }
-                        .sheet(
-                            isPresented: $isThemeOptionsShowing,
-                            onDismiss: {
-                                themeManager
-                                    .setTheme(themeMapping[themeName] ?? .light)
-                            }
-                        ) {
-                            ThemePickerView(themeName: $themeName)
-                        }
-                    VStack {
-                        Button(action: {
-                            if !isPlaying {
-                                soundInit(selectedSound)
-                            }
-                            playHandler(isPlayPauseButtonPressed: true)
-                            isPlaying.toggle()
-                        }) {
-                            !isPlaying ? Image(systemName: "play.circle.fill")
-                                .font(.system(size: 35))
-                                .foregroundStyle(
-                                    currentTheme.secondaryColor
-                                ) :
-                            Image(systemName: "pause.circle.fill")
-                                .font(.system(size: 35))
-                                .foregroundStyle(
-                                    currentTheme.secondaryColor
-                                )
-                        }
-                        Text(!isPlaying ? "off" : "on")
-                            .font(
-                                .system(
-                                    size: 20,
-                                    weight: .light,
-                                    design: .monospaced
-                                )
-                            )
-                            .foregroundStyle(
-                                currentTheme.textColor
-                            )
-                    }
-                    .padding(.top, 10)
-                }
-                Divider()
-                    .padding(.vertical)
-                    .foregroundStyle(currentTheme.dividerColor)
+        VStack (alignment: .leading) {
+            HStack(alignment: .top) {
                 VStack(alignment: .leading) {
-                    Text("Noise type")
+                    Text("hushh")
                         .font(
                             .system(
-                                size: 28,
+                                size: 40,
                                 weight: .semibold,
                                 design: .monospaced
                             )
                         )
                         .foregroundStyle(currentTheme.primaryColor)
-                    List(sounds, id:\.self) { sound in
-                        HStack {
-                            Text(sound)
-                                .font(.system(size: 20, design: .monospaced))
-                            Spacer()
-                            ZStack {
-                                Circle()
-                                    .strokeBorder(
-                                        currentTheme.primaryColor,
-                                        lineWidth: 1.5
-                                    )
-                                    .frame(width: 30, height: 30)
-                                    .foregroundStyle(
-                                        currentTheme.backgroundColor
-                                    )
-                                if selectedSound == sound {
-                                    Circle()
-                                        .frame(width: 20, height: 20)
-                                        .foregroundStyle(
-                                            currentTheme
-                                                .secondaryColor)
-                                }
-                            }
-                        }
-                        .foregroundStyle(currentTheme.textColor)
-                        .listRowBackground(
-                            currentTheme.backgroundColor
+                    Text("noise maker.")
+                        .font(
+                            .system(
+                                size: 20,
+                                weight: .medium,
+                                design: .monospaced
+                            )
                         )
-                        .onTapGesture {
-                            selectedSound = sound
-                            if isPlaying {
-                                soundInit(selectedSound)
-                                playHandler(isPlayPauseButtonPressed: false)
+                        .foregroundStyle(
+                            currentTheme.textColor
+                        )
+                }
+                Spacer()
+                Image(systemName: "paintpalette.fill")
+                    .font(.system(size: 30))
+                    .foregroundStyle(currentTheme.secondaryColor)
+                    .padding(.top, 12)
+                    .padding(.trailing, 10)
+                    .onTapGesture {
+                        isThemeOptionsShowing = true
+                    }
+                    .sheet(
+                        isPresented: $isThemeOptionsShowing,
+                        onDismiss: {
+                            themeManager
+                                .setTheme(
+                                    themeMapping[themeName] ?? .light
+                                )
+                        }
+                    ) {
+                        ThemePickerView(themeName: $themeName)
+                    }
+                    .presentationDetents(
+                        Set(arrayLiteral: PresentationDetent.medium)
+                    )
+                VStack {
+                    Button(action: {
+                        if !isPlaying {
+                            soundInit(selectedSound)
+                        }
+                        playHandler(isPlayPauseButtonPressed: true)
+                        isPlaying.toggle()
+                    }) {
+                        !isPlaying ? Image(systemName: "play.circle.fill")
+                            .font(.system(size: 35))
+                            .foregroundStyle(
+                                currentTheme.secondaryColor
+                            ) :
+                        Image(systemName: "pause.circle.fill")
+                            .font(.system(size: 35))
+                            .foregroundStyle(
+                                currentTheme.secondaryColor
+                            )
+                    }
+                    Text(!isPlaying ? "off" : "on")
+                        .font(
+                            .system(
+                                size: 20,
+                                weight: .light,
+                                design: .monospaced
+                            )
+                        )
+                        .foregroundStyle(
+                            currentTheme.textColor
+                        )
+                }
+                .padding(.top, 10)
+            }
+            Divider()
+                .padding(.vertical)
+                .foregroundStyle(currentTheme.dividerColor)
+            VStack(alignment: .leading) {
+                Text("Noise type")
+                    .font(
+                        .system(
+                            size: 28,
+                            weight: .semibold,
+                            design: .monospaced
+                        )
+                    )
+                    .foregroundStyle(currentTheme.primaryColor)
+                List(sounds, id:\.self) { sound in
+                    HStack {
+                        Text(sound)
+                            .font(.system(size: 20, design: .monospaced))
+                        Spacer()
+                        ZStack {
+                            Circle()
+                                .strokeBorder(
+                                    currentTheme.primaryColor,
+                                    lineWidth: 1.5
+                                )
+                                .frame(width: 30, height: 30)
+                                .foregroundStyle(
+                                    currentTheme.backgroundColor
+                                )
+                            if selectedSound == sound {
+                                Circle()
+                                    .frame(width: 20, height: 20)
+                                    .foregroundStyle(
+                                        currentTheme
+                                            .secondaryColor)
                             }
                         }
-                        .padding(.vertical, 4)
                     }
-                    .listStyle(PlainListStyle())
-                }
-                VStack (alignment: .leading){
-                    Text(String(format: "Volume %.f%%", volumePercentage))
-                        .font(.system(size: 28, weight: .medium, design: .monospaced))
-                        .foregroundStyle(currentTheme.primaryColor)
-                    Slider(
-                        value: $volumePercentage,
-                        in: 0...100,
-                        step: 1
+                    .background(
+                        RoundedRectangle(cornerRadius: 12, style: .continuous)
+                            .fill(currentTheme.backgroundColor)
                     )
-                    .tint(currentTheme.secondaryColor)
-                    .onChange(of: volumePercentage, initial: true) {
-                        audioPlayer?.volume = Float(volumePercentage/100)
+                    .listRowBackground(Color.clear)
+                    .foregroundStyle(currentTheme.textColor)
+                    .onTapGesture {
+                        selectedSound = sound
+                        if isPlaying {
+                            soundInit(selectedSound)
+                            playHandler(isPlayPauseButtonPressed: false)
+                        }
                     }
-                    .padding(.top, -10)
+                    .padding(.vertical, 4)
+                    .animation(.easeInOut(duration: 0.2), value: currentTheme)
                 }
-                .padding(.top)
-                
-                Spacer()
+                .listStyle(PlainListStyle())
+                .animation(.easeInOut(duration: 0.2), value: currentTheme)
             }
-            .padding()
-            .background(currentTheme.backgroundColor)
+            VStack (alignment: .leading){
+                Text(String(format: "Volume %.f%%", volumePercentage))
+                    .font(.system(size: 28, weight: .medium, design: .monospaced))
+                    .foregroundStyle(currentTheme.primaryColor)
+                Slider(
+                    value: $volumePercentage,
+                    in: 0...100,
+                    step: 1
+                )
+                .tint(currentTheme.secondaryColor)
+                .onChange(of: volumePercentage, initial: true) {
+                    audioPlayer?.volume = Float(volumePercentage/100)
+                }
+                .padding(.top, -10)
+            }
+            .padding(.top)
+            
+            Spacer()
+        }
+        .padding()
+        .background(currentTheme.backgroundColor)
+        .animation(.easeInOut(duration: 0.2), value: currentTheme)
     }
     
     func soundInit(_ soundName: String ) {
         guard let soundURL = Bundle.main.url(forResource: soundName, withExtension: "mp3") else {
-            print("Sound file not found.")
             return
         }
         
@@ -221,6 +229,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView(themeName: "light")
-        .environmentObject(ThemeManager())
+    ContentView(themeName: "dark")
+        .environmentObject(ThemeManager(currentTheme: .dark))
 }

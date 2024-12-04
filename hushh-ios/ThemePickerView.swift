@@ -21,18 +21,18 @@ struct ThemePickerView: View {
         "mutedPastel",
         "sunset"
     ]
-    @State var selectedTheme: String = "light"
     @Binding var themeName: String
     
+    
     var body: some View {
+        let _currentTheme = themeManager.currentTheme
         VStack(alignment: .leading) {
             Text("choose theme")
                 .font(.system(size: 28, weight: .medium, design: .monospaced))
-                .foregroundStyle(themeManager.currentTheme.primaryColor)
+                .foregroundStyle(_currentTheme.primaryColor)
                 .padding()
             List(themes, id: \.self) { theme in
                 Button(action:{
-                    selectedTheme = theme
                     themeName = theme
                     dismiss()
                 }) {
@@ -46,29 +46,30 @@ struct ThemePickerView: View {
                                 )
                             )
                             .foregroundStyle(
-                                themeManager.currentTheme.textColor
+                                _currentTheme.textColor
                             )
                         Spacer()
-                        if selectedTheme == theme {
+                        if themeName == theme {
                             Image(systemName: "checkmark")
                                 .foregroundStyle(
-                                    themeManager.currentTheme.textColor
+                                    _currentTheme.textColor
                                 )
                         }
                     }
                     .padding(.vertical, 7)
                 }
-                .listRowBackground(themeManager.currentTheme.backgroundColor)
+                .listRowBackground(_currentTheme.backgroundColor)
             }
             .listStyle(PlainListStyle())
         }
         .padding()
-        .background(themeManager.currentTheme.backgroundColor)
+        .background(_currentTheme.backgroundColor)
+        .animation(.easeInOut(duration: 0.2), value: _currentTheme)
         
     }
 }
 
 #Preview {
     ContentView(themeName: "blueWhite")
-        .environmentObject(ThemeManager())
+        .environmentObject(ThemeManager(currentTheme: .light))
 }
